@@ -8,12 +8,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MyGameGalaxyX extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
+	Texture img,img2,img1;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
+		img1 = new Texture("Space1920x1200.jpg");
+		img2 = new Texture("StarsSky2048x1152.jpg");
 	}
 
 	@Override
@@ -21,6 +23,7 @@ public class MyGameGalaxyX extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
+		batch.draw(img1, 0, 0, 650, 600);
 		batch.draw(img, 0, 0);
 		batch.end();
 	}
