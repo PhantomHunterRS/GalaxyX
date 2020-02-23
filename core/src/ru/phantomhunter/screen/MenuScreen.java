@@ -11,8 +11,9 @@ public class MenuScreen extends BaseScreen {
     private Texture img,img1;
     private Vector2 touch;
     private Vector2 speed;
-    private Vector2 position;
-
+    private Vector2 firstPosition;
+    private Vector2 lastPosition;
+    final private float SPEED_LEN = 6f;
 
     @Override
     public void show() {
@@ -21,7 +22,8 @@ public class MenuScreen extends BaseScreen {
         img1 = new Texture("StarsSky2048x1152.jpg");
         touch = new Vector2();
         speed = new Vector2();
-        position = new Vector2(0,0);
+        lastPosition = new Vector2();
+        firstPosition = new Vector2(0,0);
     }
 
     @Override
@@ -29,13 +31,15 @@ public class MenuScreen extends BaseScreen {
         super.render(delta);
         Gdx.gl.glClearColor(1.f, 1.f, 1.f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        if (((position.y + img.getHeight())< Gdx.graphics.getHeight()) || (position.y ==-1) || (position.x ==-1) ||
-                ((position.x + img.getWidth())< Gdx.graphics.getWidth())){
-            position.add(speed);
+        lastPosition.set(touch);
+        if (lastPosition.sub(firstPosition).len() >SPEED_LEN){
+            firstPosition.add(speed);}
+        else {
+            firstPosition.set(touch);
         }
         batch.begin();
-        batch.draw(img1, 0,0 , 640, 480);
-        batch.draw(img, position.x, position.y);
+        batch.draw(img1, 0,0);
+        batch.draw(img, firstPosition.x, firstPosition.y);
         batch.end();
     }
 
@@ -49,11 +53,8 @@ public class MenuScreen extends BaseScreen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
         touch.set(screenX,Gdx.graphics.getHeight()- screenY);
+        speed.set(touch.cpy().sub(firstPosition).setLength(SPEED_LEN));
         System.out.println("touch ("+ touch.x  +";" + touch.y);
-        orientationFly(touch.x,touch.y);
         return false;
-    }
-    public void orientationFly (float x, float y){
-        speed.set((position.x + x)*0.05f,(position.y + y)*0.05f);
     }
 }
