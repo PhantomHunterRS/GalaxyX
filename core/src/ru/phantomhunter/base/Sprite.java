@@ -40,7 +40,9 @@ public abstract class Sprite extends Rect {
         setWidth(height*aspect);
     }
     public void resize(Rect worldBounds){};
-    public void touchDown(Vector2 touch, int pointer, int button) {};
+    public Vector2 touchDown(Vector2 touch, int pointer, int button) {
+        return touch;
+    };
     public void touchUp(Vector2 touch, int pointer, int button){};
     public void touchDragged(Vector2 touch, int pointer){};
     public void update (float delta){};

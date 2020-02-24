@@ -8,20 +8,25 @@ import com.badlogic.gdx.math.Vector2;
 import ru.phantomhunter.base.BaseScreen;
 import ru.phantomhunter.math.Rect;
 import ru.phantomhunter.sprite.Background;
+import ru.phantomhunter.sprite.Logo;
 
 public class MenuScreen extends BaseScreen {
-    private Texture img,imgBG;
+    private Texture imgLG,imgBG;
     private Vector2 firstPosition;
-
+    private Vector2 speed;
     private Background background;
+    private Logo logo;
 
     @Override
     public void show() {
         super.show();
-        img = new Texture("badlogic.jpg");
+        imgLG = new Texture("badlogic.jpg");
         imgBG = new Texture("textures/Space1920x1200.jpg");
         firstPosition = new Vector2();
+        speed = new Vector2();
         background = new Background(imgBG);
+        logo = new Logo(imgLG);
+
     }
 
     @Override
@@ -31,7 +36,9 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-        batch.draw(img, firstPosition.x, firstPosition.y,0.5f,0.5f);
+        logo.draw(batch);
+        firstPosition.add(speed);
+        //batch.draw(img, firstPosition.x, firstPosition.y,0.5f,0.5f);
         batch.end();
     }
 
@@ -39,11 +46,12 @@ public class MenuScreen extends BaseScreen {
     public void dispose() {
         super.dispose();
         imgBG.dispose();
-        img.dispose();
+        imgLG.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
+        speed = logo.touchDown(touch,pointer,button).setLength(1f);
         return super.touchDown(touch, pointer, button);
     }
 
@@ -51,5 +59,6 @@ public class MenuScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
+        logo.resize(worldBounds);
     }
 }
