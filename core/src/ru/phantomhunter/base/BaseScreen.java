@@ -21,7 +21,6 @@ public class BaseScreen implements Screen, InputProcessor {
     private Matrix4 worldToGL;
     private Vector2 touch;
     private Matrix3 screenToWorld;
-    final private float SIZE = 2f;
 
     @Override
     public void show() {
@@ -29,7 +28,7 @@ public class BaseScreen implements Screen, InputProcessor {
         batch = new SpriteBatch();
         screenBounds = new Rect();
         worldBounds = new Rect();
-        glBounds = new Rect(0,0,SIZE/2,SIZE/2);
+        glBounds = new Rect(0,0,1f,1f);
         worldToGL = new Matrix4();
         touch = new Vector2();
         screenToWorld = new Matrix3();
@@ -47,9 +46,9 @@ public class BaseScreen implements Screen, InputProcessor {
         screenBounds.setSize(width,height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);
-        worldBounds.setHeight(SIZE/2);
+        worldBounds.setHeight(1f);
         float aspect = width / (float) height;
-        worldBounds.setWidth(aspect * SIZE/2);
+        worldBounds.setWidth(1f*aspect);
         MatrixUtils.calcTransitionMatrix(worldToGL,worldBounds,glBounds);
         MatrixUtils.calcTransitionMatrix(screenToWorld,screenBounds,worldBounds);
         batch.setProjectionMatrix(worldToGL);
