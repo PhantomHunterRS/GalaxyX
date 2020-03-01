@@ -18,6 +18,7 @@ public class BaseScreen implements Screen, InputProcessor {
     private Rect screenBounds;
     private Rect worldBounds;
     private Rect glBounds;
+
     private Matrix4 worldToGL;
     private Vector2 touch;
     private Matrix3 screenToWorld;
@@ -29,8 +30,8 @@ public class BaseScreen implements Screen, InputProcessor {
         screenBounds = new Rect();
         worldBounds = new Rect();
         glBounds = new Rect(0,0,1f,1f);
-        worldToGL = new Matrix4();
         touch = new Vector2();
+        worldToGL = new Matrix4();
         screenToWorld = new Matrix3();
         Gdx.input.setInputProcessor(this);
     }
@@ -42,7 +43,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-        System.out.println("resize " + width +"x" + height);
+        //System.out.println("resize " + width +"x" + height);
         screenBounds.setSize(width,height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);

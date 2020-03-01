@@ -8,23 +8,22 @@ import ru.phantomhunter.math.Rect;
 import ru.phantomhunter.math.Rnd;
 
 public class Star extends Sprite {
-    private static final float STAR_HEIGHT = 0.007f;
-    private final Vector2 speedStar;
-    private Rect worldBounds;
+    private static final float STAR_HEIGHT = 0.006f;
 
-    public Star(TextureAtlas atlas) {
-        super(atlas.findRegion("smallStar"));
-        speedStar = new Vector2();
-        speedStar.set(Rnd.nextFloat(-0.005f,0.005f),Rnd.nextFloat(-0.2f,-0.01f));
+    public Vector2 getSpeedStar() {
+        return speedStar;
     }
+    private final Vector2 speedStar;
 
-    @Override
-    public void resize(Rect worldBounds) {
-        setHeightProportion(STAR_HEIGHT);
-        float positionStarX = Rnd.nextFloat(worldBounds.getLeft(),worldBounds.getRight());
-        float positionStarY = Rnd.nextFloat(worldBounds.getBottom(),worldBounds.getTop());
-        pos.set(positionStarX,positionStarY);
-        this.worldBounds = worldBounds;
+    private Rect worldBounds;
+    private float animateTimer;
+    private float animateInterval = 0.5f;
+
+    public Star(TextureAtlas atlas,String name) {
+        super(atlas.findRegion(name));
+        speedStar = new Vector2();
+        speedStar.set(Rnd.nextFloat(-0.005f, 0.005f),Rnd.nextFloat(-0.2f, -0.01f));
+        animateTimer = Rnd.nextFloat(0,1f);
     }
 
     @Override
@@ -33,14 +32,32 @@ public class Star extends Sprite {
         if (getRight()< worldBounds.getLeft()){
             setLeft(worldBounds.getRight());
         }
-        if (getLeft() < worldBounds.getRight()){
+        if (getLeft() > worldBounds.getRight()){
             setRight(worldBounds.getLeft());
         }
-        if (getTop()<worldBounds.getBottom()){
+        if (getTop()< worldBounds.getBottom()){
             setBottom(worldBounds.getTop());
         }
-        if (getBottom()<worldBounds.getTop()){
+        if (getBottom()> worldBounds.getTop()){
             setTop(worldBounds.getBottom());
         }
+        animateTimer +=delta;
+        if (animateTimer >= animateInterval){
+            animateTimer=0;
+            setHeightProportion(STAR_HEIGHT);
+        }else {
+            setHeightProportion(getHeight()+ 0.0002f);
+        }
     }
+
+    @Override
+    public void resize(Rect worldBounds) {
+            setHeightProportion(STAR_HEIGHT);
+        float positionStarX = Rnd.nextFloat(worldBounds.getLeft(),worldBounds.getRight());
+        float positionStarY = Rnd.nextFloat(worldBounds.getBottom(),worldBounds.getTop());
+        pos.set(positionStarX,positionStarY);
+        this.worldBounds = worldBounds;
+    }
+
+
 }

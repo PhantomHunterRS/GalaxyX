@@ -37,7 +37,7 @@ public abstract class Sprite extends Rect {
     public void setHeightProportion(float height){
         setHeight(height);
         float aspect = regions[frame].getRegionWidth()/(float)regions[frame].getRegionHeight();
-        setWidth(height*aspect);
+        setWidth(height * aspect);
     }
     public void resize(Rect worldBounds){};
     public void touchDown(Vector2 touch, int pointer, int button) {};
