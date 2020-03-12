@@ -1,6 +1,8 @@
 package ru.phantomhunter.sprite;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -27,6 +29,12 @@ public class Ship extends Sprite {
     private int leftPointer = INVALID_POINTER;
     private int rightPointer= INVALID_POINTER;
 
+    private float reloadInterval;
+    private float reloadTimer;
+
+    private Sound shootSound;
+
+
 
     public Ship(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -34,6 +42,8 @@ public class Ship extends Sprite {
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletSpeed = new Vector2(0,0.7f);
         this.bulletPosition = new Vector2();
+        this.reloadInterval = 0.2f;
+        this.shootSound = Gdx.audio.newSound(Gdx.files.internal("music/laserShoot.mp3"));
     }
 
     @Override
@@ -53,6 +63,11 @@ public class Ship extends Sprite {
     public void update(float delta) {
 
         pos.mulAdd(speedShip,delta);
+        reloadTimer += delta;
+        if(reloadTimer>=reloadInterval){
+            reloadTimer=0;
+            shooter();
+        }
         if ( getRight() > worldBounds.getRight()+0.05f){
             setRight(worldBounds.getRight()+0.05f);
             stop();
@@ -61,6 +76,9 @@ public class Ship extends Sprite {
             stop();
         }
 
+    }
+    public void dispose(){
+        shootSound.dispose();
     }
 
 
@@ -148,6 +166,7 @@ public class Ship extends Sprite {
     }
 
     private void shooter(){
+        shootSound.play();
         Bullet bullet = bulletPool.obtain();
         bulletPosition.set(pos.x,getTop());
         bullet.set(this,bulletRegion,bulletPosition,bulletSpeed,0.01f,worldBounds,1);

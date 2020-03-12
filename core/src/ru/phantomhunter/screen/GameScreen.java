@@ -38,7 +38,7 @@ public class GameScreen extends BaseScreen {
         super.show();
         imgBG2 = new Texture("textures/StarsSky2048x1152.jpg");
         background = new Background(imgBG2);
-        melodyGame = Gdx.audio.newMusic(Gdx.files.internal("music/cosmos.mp3"));
+
         //shootSound = Gdx.audio.newSound(Gdx.files.internal("data/mysound.mp3"));
         atlasStars = new TextureAtlas(Gdx.files.internal("textures/menuGameAtlas.atlas"));
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
@@ -49,6 +49,7 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlasStars, "star2");
             stars[i].getSpeedStar().set(Rnd.nextFloat(-0.001f, 0.001f),Rnd.nextFloat(-2f, -0.3f));
         }
+        melodyGame = Gdx.audio.newMusic(Gdx.files.internal("music/cosmos.mp3"));
         melodyGame.play();
         melodyGame.setLooping(true);
     }
@@ -71,11 +72,23 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    public void pause() {
+       melodyGame.pause();
+    }
+
+    @Override
+    public void resume() {
+        melodyGame.play();
+    }
+
+    @Override
     public void dispose() {
         imgBG2.dispose();
         atlas.dispose();
+        melodyGame.dispose();
         bulletPool.dispose();
         atlasStars.dispose();
+        ship.dispose();
         super.dispose();
     }
 
