@@ -2,16 +2,12 @@ package ru.phantomhunter.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.phantomhunter.base.Ship;
-import ru.phantomhunter.base.Sprite;
 import ru.phantomhunter.math.Rect;
-import ru.phantomhunter.math.Rnd;
 import ru.phantomhunter.pool.BulletPool;
 
 public class MyGameShip extends Ship {
@@ -25,11 +21,14 @@ public class MyGameShip extends Ship {
     public MyGameShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.speedShip = new Vector2();
-        this.speedShipZero = new Vector2(0.5,0);
+        this.speedShipZero = new Vector2(0.5f,0);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletSpeed = new Vector2(0,0.7f);
         this.bulletPosition = new Vector2();
+        this.bulletHeight =0.01f;
+        this.damage = 1;
+        this.healthPoint = 100;
         this.reloadInterval = 0.2f;
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("music/laserShoot.mp3"));
     }
@@ -49,7 +48,7 @@ public class MyGameShip extends Ship {
 
     @Override
     public void update(float delta) {
-
+        super.update(delta);
         pos.mulAdd(speedShip,delta);
         reloadTimer += delta;
         if(reloadTimer>=reloadInterval){
@@ -65,11 +64,6 @@ public class MyGameShip extends Ship {
         }
 
     }
-    public void dispose(){
-        shootSound.dispose();
-    }
-
-
     @Override
     public void touchDown(Vector2 touch, int pointer, int button) {
         if (touch.x < worldBounds.pos.x){
@@ -153,11 +147,6 @@ public class MyGameShip extends Ship {
         speedShip.setZero();
     }
 
-    private void shooter(){
-        shootSound.play();
-        Bullet bullet = bulletPool.obtain();
-        bulletPosition.set(pos.x,getTop());
-        bullet.set(this,bulletRegion,bulletPosition,bulletSpeed,0.01f,worldBounds,1);
-    }
+
 }
 
