@@ -8,36 +8,24 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import ru.phantomhunter.base.Ship;
 import ru.phantomhunter.base.Sprite;
 import ru.phantomhunter.math.Rect;
 import ru.phantomhunter.math.Rnd;
 import ru.phantomhunter.pool.BulletPool;
 
-public class Ship extends Sprite {
+public class MyGameShip extends Ship {
    private static final int INVALID_POINTER = -1;
-
-    private Rect worldBounds;
-    private BulletPool bulletPool;
-    private TextureRegion bulletRegion;
-    private final Vector2 bulletSpeed;
-    private final Vector2 bulletPosition;
-    private final Vector2 speedShip = new Vector2();
-    private final Vector2 speedShipZero = new Vector2(0.5f,0);
 
     private boolean pressedLeft;
     private boolean pressedRight;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer= INVALID_POINTER;
 
-    private float reloadInterval;
-    private float reloadTimer;
-
-    private Sound shootSound;
-
-
-
-    public Ship(TextureAtlas atlas, BulletPool bulletPool) {
+    public MyGameShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.speedShip = new Vector2();
+        this.speedShipZero = new Vector2(0.5,0);
         this.bulletPool = bulletPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletSpeed = new Vector2(0,0.7f);
