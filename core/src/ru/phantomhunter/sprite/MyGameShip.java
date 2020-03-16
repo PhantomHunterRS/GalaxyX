@@ -9,27 +9,29 @@ import com.badlogic.gdx.math.Vector2;
 import ru.phantomhunter.base.Ship;
 import ru.phantomhunter.math.Rect;
 import ru.phantomhunter.pool.BulletPool;
+import ru.phantomhunter.pool.ExplosionPool;
 
 public class MyGameShip extends Ship {
-   private static final int INVALID_POINTER = -1;
+    private static final int INVALID_POINTER = -1;
 
     private boolean pressedLeft;
     private boolean pressedRight;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer= INVALID_POINTER;
 
-    public MyGameShip(TextureAtlas atlas, BulletPool bulletPool) {
+    public MyGameShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.speedShip = new Vector2();
         this.speedShipZero = new Vector2(0.5f,0);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         this.bulletRegion = atlas.findRegion("bulletMainShip");
-        this.bulletSpeed = new Vector2(0,0.7f);
+        this.bulletSpeed = new Vector2(0,0.6f);
         this.bulletPosition = new Vector2();
         this.bulletHeight =0.01f;
         this.damage = 1;
-        this.healthPoint = 100;
         this.reloadInterval = 0.2f;
+        this.healthPoint = 100;
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("music/laserShoot.mp3"));
     }
 
@@ -48,13 +50,8 @@ public class MyGameShip extends Ship {
 
     @Override
     public void update(float delta) {
+        bulletPosition.set(pos.x, getTop());
         super.update(delta);
-        pos.mulAdd(speedShip,delta);
-        reloadTimer += delta;
-        if(reloadTimer>=reloadInterval){
-            reloadTimer=0;
-            shooter();
-        }
         if ( getRight() > worldBounds.getRight()+0.05f){
             setRight(worldBounds.getRight()+0.05f);
             stop();
@@ -62,7 +59,6 @@ public class MyGameShip extends Ship {
             setLeft(worldBounds.getLeft()-0.05f);
             stop();
         }
-
     }
     @Override
     public void touchDown(Vector2 touch, int pointer, int button) {
