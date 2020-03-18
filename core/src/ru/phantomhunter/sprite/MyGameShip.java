@@ -13,6 +13,7 @@ import ru.phantomhunter.pool.ExplosionPool;
 
 public class MyGameShip extends Ship {
     private static final int INVALID_POINTER = -1;
+    private static final int HEALTHPOINT = 10;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -31,9 +32,20 @@ public class MyGameShip extends Ship {
         this.bulletHeight =0.01f;
         this.damage = 1;
         this.reloadInterval = 0.2f;
-        this.healthPoint = 10;
+        this.healthPoint = HEALTHPOINT;
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("music/laserShoot.mp3"));
     }
+    public void startNewGame(){
+        this.healthPoint = HEALTHPOINT;
+        stop();
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        this.pos.x = worldBounds.pos.x;
+        flushDestroy();
+    }
+
 
     @Override
     public void resize(Rect worldBounds) {

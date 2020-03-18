@@ -23,6 +23,7 @@ import ru.phantomhunter.sprite.Bullet;
 import ru.phantomhunter.sprite.EnemyShip;
 import ru.phantomhunter.sprite.GameOver;
 import ru.phantomhunter.sprite.MyGameShip;
+import ru.phantomhunter.sprite.NewGameStart;
 import ru.phantomhunter.sprite.Star;
 import ru.phantomhunter.utils.EnemiesEmitter;
 import sun.print.PSPrinterJob;
@@ -50,6 +51,7 @@ public class GameScreen extends BaseScreen {
     private ExplosionPool explosionPool;
     private EnemiesEmitter enemiesEmitter;
     private GameOver gameOver;
+    private NewGameStart newGameStart;
 
     @Override
     public void show() {
@@ -76,7 +78,9 @@ public class GameScreen extends BaseScreen {
         melodyGame.setLooping(true);
         melodyGame.play();
         gameOver = new GameOver(atlas);
+        newGameStart = new NewGameStart(atlas,this);
         state = State.PLAYING;
+
     }
 
     @Override
@@ -95,6 +99,7 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         myGameShip.resize(worldBounds);
+        newGameStart.resize(worldBounds);
         gameOver.resize(worldBounds);
     }
 
@@ -146,7 +151,8 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         if (state == State.PLAYING){
             myGameShip.touchDown(touch, pointer, button);
-    }
+    }else if(state == State.GAME_OVER)
+            newGameStart.touchDown(touch, pointer, button);
         return false;
     }
 
@@ -155,11 +161,28 @@ public class GameScreen extends BaseScreen {
         if (state == State.PLAYING){
         myGameShip.touchUp(touch,pointer,button);
         }
+        else if(state == State.GAME_OVER)
+            newGameStart.touchUp(touch, pointer, button);
         return false;
     }
+    public void startNewGame(){
+        state = State.PLAYING;
+
+        myGameShip.startNewGame();
+        bulletPool.freeAllActiveObjects();
+        enemyPool.freeAllActiveObjects();
+        explosionPool.freeAllActiveObjects();
+    }
+
+
+
     private void update(float delta) {
         for (Star star:stars) {
-            star.update(delta);
+            if (state != State.GAME_OVER) {
+                star.update(delta);
+            }else {
+                star.update(delta*0.2f);
+            }
         }
         explosionPool.updateActiveSprites(delta);
         if (state == State.PLAYING ) {
@@ -224,6 +247,7 @@ public class GameScreen extends BaseScreen {
                 enemyPool.drawActiveSprites(batch);
             }else if(state == State.GAME_OVER) {
                 gameOver.draw(batch);
+                newGameStart.draw(batch);
             }
         batch.end();
     }
