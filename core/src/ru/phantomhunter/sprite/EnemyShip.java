@@ -3,6 +3,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import javax.swing.JButton;
+
 import ru.phantomhunter.base.Ship;
 import ru.phantomhunter.math.Rect;
 import ru.phantomhunter.pool.BulletPool;
@@ -58,4 +60,9 @@ public class EnemyShip extends Ship {
         this.healthPoint = healthPoint;
         speedShip.set(descentSpeed);
     }
+    public boolean isBulletCollision (Rect bullet){
+        return !(bullet.getRight() < getLeft() || bullet.getLeft() > getRight()
+                || bullet.getBottom()>getTop() || bullet.getTop()< pos.y);
+    }
+
 }

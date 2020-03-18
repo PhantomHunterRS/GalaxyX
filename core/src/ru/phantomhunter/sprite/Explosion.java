@@ -8,7 +8,7 @@ import ru.phantomhunter.base.Sprite;
 
 public class Explosion extends Sprite {
 
-    private float animateIntervale = 0.017f;
+    private float animateIntervale = 0.001f;
     private float animateTimer;
     private Sound explosionSound;
 

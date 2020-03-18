@@ -31,7 +31,7 @@ public class MyGameShip extends Ship {
         this.bulletHeight =0.01f;
         this.damage = 1;
         this.reloadInterval = 0.2f;
-        this.healthPoint = 100;
+        this.healthPoint = 10;
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("music/laserShoot.mp3"));
     }
 
@@ -133,6 +133,11 @@ public class MyGameShip extends Ship {
                 break;
         }
     }
+    public boolean isBulletCollision (Rect bullet){
+        return !(bullet.getRight() < getLeft() || bullet.getLeft() > getRight()
+                || bullet.getBottom()>pos.y || bullet.getTop()< getBottom() );
+    }
+
     private void moveRight (){
       speedShip.set(speedShipZero);
     }
@@ -142,6 +147,7 @@ public class MyGameShip extends Ship {
     private void stop(){
         speedShip.setZero();
     }
+
 
 
 }

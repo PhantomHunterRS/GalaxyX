@@ -11,6 +11,7 @@ import ru.phantomhunter.sprite.Bullet;
 import ru.phantomhunter.sprite.Explosion;
 
 public class Ship extends Sprite {
+    protected final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
 
     protected Vector2 speedShip;
     protected Vector2 speedShipZero;
@@ -27,7 +28,7 @@ public class Ship extends Sprite {
     protected float reloadInterval;
     protected float reloadTimer;
     protected int healthPoint;
-
+    protected float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
     protected Sound shootSound;
 
     public Ship() {
@@ -54,9 +55,19 @@ public class Ship extends Sprite {
             reloadTimer = 0f;
             shooter();
         }
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL){
+            frame = 0;
+        }
     }
-
-
+    public void damage(int damage){
+        this.healthPoint -= damage;
+        if (healthPoint <=0){
+            destroy();
+        }
+        damageAnimateTimer = 0f;
+        frame = 1;
+    }
 
     protected void shooter(){
         shootSound.play();
@@ -66,5 +77,9 @@ public class Ship extends Sprite {
     protected void boom (){
         Explosion explosion = explosionPool.obtain();
         explosion.set(getHeight(),pos);
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }
