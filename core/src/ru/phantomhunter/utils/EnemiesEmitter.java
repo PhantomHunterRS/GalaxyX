@@ -20,14 +20,14 @@ public class EnemiesEmitter {
     private static final float ENEMY_MEDIUM_HEIGHT = 0.15f;
     private static final float ENEMY_MEDIUM_BULLET_HEIGHT = 0.025f;
     private static final float ENEMY_MEDIUM_BULLET_VY = -0.3f;
-    private static final int ENEMY_MEDIUM_DAMAGE = 5;
+    private static final int ENEMY_MEDIUM_DAMAGE = 3;
     private static final float ENEMY_MEDIUM_RELOADINTERVAL = 2f;
     private static final int ENEMY_MEDIUM_HEALTHPOINT = 5;
 
     private static final float ENEMY_BIG_HEIGHT = 0.2f;
     private static final float ENEMY_BIG_BULLET_HEIGHT = 0.035f;
     private static final float ENEMY_BIG_BULLET_VY = -0.3f;
-    private static final int ENEMY_BIG_DAMAGE = 10;
+    private static final int ENEMY_BIG_DAMAGE = 5;
     private static final float ENEMY_BIG_RELOADINTERVAL = 1.5f;
     private static final int ENEMY_BIG_HEALTHPOINT = 10;
     private Rect worldBounds;
@@ -45,6 +45,8 @@ public class EnemiesEmitter {
 
     private TextureRegion bulletRegion;
     private final EnemyPool enemyPool;
+    private int level = 1 ;
+    private int heathUp;
 
     public EnemiesEmitter(TextureAtlas atlas, EnemyPool enemyPool,Rect worldBounds) {
         this.enemyPool = enemyPool;
@@ -54,7 +56,9 @@ public class EnemiesEmitter {
         this.enemyBigRegions = Regions.split(atlas.findRegion("enemy2"),1,2,2);
         this.bulletRegion = atlas.findRegion("bulletEnemy");
     }
-    public void generateEnemyShips(float delta) {
+    public void generateEnemyShips(float delta,int frags) {
+        heathUp = level - 1;
+        level = frags / 10 +1;
         generateTimer += delta;
         if (generateTimer >= generateIntervalEnemyShips) {
             generateTimer = 0f;
@@ -66,10 +70,10 @@ public class EnemiesEmitter {
                         bulletRegion,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         ENEMY_SMALL_BULLET_VY,
-                        ENEMY_SMALL_DAMAGE,
+                        ENEMY_SMALL_DAMAGE+level,
                         ENEMY_SMALL_RELOADINTERVAL,
                         ENEMY_SMALL_HEIGHT,
-                        ENEMY_SMALL_HEALTHPOINT
+                        ENEMY_SMALL_HEALTHPOINT + heathUp
                 );
             }else if (type <0.8f){
                 enemyShip.set(enemyMediumRegions,
@@ -77,10 +81,10 @@ public class EnemiesEmitter {
                         bulletRegion,
                         ENEMY_MEDIUM_BULLET_HEIGHT,
                         ENEMY_MEDIUM_BULLET_VY,
-                        ENEMY_MEDIUM_DAMAGE,
+                        ENEMY_MEDIUM_DAMAGE+level,
                         ENEMY_MEDIUM_RELOADINTERVAL,
                         ENEMY_MEDIUM_HEIGHT,
-                        ENEMY_MEDIUM_HEALTHPOINT
+                        ENEMY_MEDIUM_HEALTHPOINT +heathUp
                 );
             }else {
                 enemyShip.set(enemyBigRegions,
@@ -88,10 +92,10 @@ public class EnemiesEmitter {
                         bulletRegion,
                         ENEMY_BIG_BULLET_HEIGHT,
                         ENEMY_BIG_BULLET_VY,
-                        ENEMY_BIG_DAMAGE,
+                        ENEMY_BIG_DAMAGE+level,
                         ENEMY_BIG_RELOADINTERVAL,
                         ENEMY_BIG_HEIGHT,
-                        ENEMY_BIG_HEALTHPOINT
+                        ENEMY_BIG_HEALTHPOINT + heathUp
                 );
             }
                 System.out.println("Enemy Starts");
@@ -99,5 +103,9 @@ public class EnemiesEmitter {
                 enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyShip.getHalfWidth(), worldBounds.getRight() - enemyShip.getHalfWidth());
 
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 }

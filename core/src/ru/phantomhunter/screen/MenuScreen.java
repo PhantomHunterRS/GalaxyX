@@ -13,9 +13,14 @@ import ru.phantomhunter.sprite.Background;
 import ru.phantomhunter.sprite.ButtonExit;
 import ru.phantomhunter.sprite.ButtonPlay;
 import ru.phantomhunter.sprite.Star;
+import ru.phantomhunter.utils.Font;
 
 public class MenuScreen extends BaseScreen {
     private static final int STAR_COUNT = 300;
+    private static final float SIZE_FONT = 0.02f;
+    private static final float SIZE_FONT_NAME_GAME = 0.07f;
+    private final String DEVELOPER = "by PhantomHunter";
+    private final String GAMENAME = "GALAXY X";
     private final Game game;
     private TextureAtlas atlas;
     private Texture imgBG;
@@ -24,6 +29,8 @@ public class MenuScreen extends BaseScreen {
     private int x;
     private ButtonExit buttonExit;
     private ButtonPlay buttonPlay;
+    private Font fontsMenu;
+    private Font fontsGameName;
 
     public MenuScreen(Game game) {
         this.game = game;
@@ -54,6 +61,10 @@ public class MenuScreen extends BaseScreen {
         }
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas,game) ;
+        fontsMenu = new Font("fonts/gothic.fnt","fonts/gothic.png");
+        fontsMenu.setSize(SIZE_FONT);
+        fontsGameName = new Font("fonts/PoorRichard.fnt","fonts/PoorRichard.png");
+        fontsGameName.setSize(SIZE_FONT_NAME_GAME);
     }
 
     @Override
@@ -66,6 +77,8 @@ public class MenuScreen extends BaseScreen {
     public void dispose() {
         imgBG.dispose();
         atlas.dispose();
+        fontsMenu.dispose();
+        fontsGameName.dispose();
         super.dispose();
     }
     @Override
@@ -111,6 +124,8 @@ public class MenuScreen extends BaseScreen {
         }
         buttonExit.draw(batch);
         buttonPlay.draw(batch);
+        fontsMenu.draw(batch,DEVELOPER,worldBounds.getRight()-0.25f,worldBounds.getBottom()+0.05f);
+        fontsGameName.draw(batch,GAMENAME,worldBounds.pos.x-0.25f,worldBounds.pos.y+0.1f);
         batch.end();
     }
 }

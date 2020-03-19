@@ -13,7 +13,7 @@ import ru.phantomhunter.pool.ExplosionPool;
 
 public class MyGameShip extends Ship {
     private static final int INVALID_POINTER = -1;
-    private static final int HEALTHPOINT = 10;
+    private static final int HEALTHPOINT = 15;
 
     private boolean pressedLeft;
     private boolean pressedRight;

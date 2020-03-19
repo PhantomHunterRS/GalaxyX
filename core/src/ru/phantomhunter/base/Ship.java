@@ -82,4 +82,8 @@ public class Ship extends Sprite {
     public int getDamage() {
         return damage;
     }
+
+    public int getHealthPoint() {
+        return healthPoint;
+    }
 }

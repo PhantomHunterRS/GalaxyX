@@ -26,6 +26,7 @@ import ru.phantomhunter.sprite.MyGameShip;
 import ru.phantomhunter.sprite.NewGameStart;
 import ru.phantomhunter.sprite.Star;
 import ru.phantomhunter.utils.EnemiesEmitter;
+import ru.phantomhunter.utils.Font;
 import sun.print.PSPrinterJob;
 
 
@@ -34,6 +35,12 @@ public class GameScreen extends BaseScreen {
         PLAYING,PAUSE,GAME_OVER
     }
     private static final int STAR_COUNT = 100;
+    private static final float SIZE_FONT = 0.03f;
+    private final int HEATH_POINT = 10;
+    private static final String ENEMY_SHIP_KILLED = "Frags:";
+    private static final String HEATHPOINT = "HP:";
+    private static final String LEVEL_GAME = "Level:";
+
     private TextureAtlas atlas;
     private TextureAtlas atlasStars;
     private Star[] stars;
@@ -52,6 +59,13 @@ public class GameScreen extends BaseScreen {
     private EnemiesEmitter enemiesEmitter;
     private GameOver gameOver;
     private NewGameStart newGameStart;
+    private Font fonts;
+    private int enemyShipKilled;
+    private StringBuilder stringBuilderEnemyKilled;
+    private int heathPoint;
+    private StringBuilder stringBuilderHeathPoint;
+    private int levelGame;
+    private StringBuilder stringBuilderLevel;
 
     @Override
     public void show() {
@@ -80,7 +94,14 @@ public class GameScreen extends BaseScreen {
         gameOver = new GameOver(atlas);
         newGameStart = new NewGameStart(atlas,this);
         state = State.PLAYING;
-
+        fonts = new Font("fonts/TimesNewRoman.fnt","fonts/TimesNewRoman.png");
+        fonts.setSize(SIZE_FONT);
+        enemyShipKilled = 0;
+        heathPoint = HEATH_POINT;
+        levelGame = 1;
+        stringBuilderEnemyKilled = new StringBuilder();
+        stringBuilderHeathPoint = new StringBuilder();
+        stringBuilderLevel = new StringBuilder();
     }
 
     @Override
@@ -128,6 +149,7 @@ public class GameScreen extends BaseScreen {
         soundShootEnemy.dispose();
         soundBoom.dispose();
         myGameShip.dispose();
+        fonts.dispose();
         super.dispose();
     }
 
@@ -167,7 +189,9 @@ public class GameScreen extends BaseScreen {
     }
     public void startNewGame(){
         state = State.PLAYING;
-
+        enemyShipKilled = 0;
+        levelGame = 1;
+        heathPoint = HEATH_POINT;
         myGameShip.startNewGame();
         bulletPool.freeAllActiveObjects();
         enemyPool.freeAllActiveObjects();
@@ -189,7 +213,7 @@ public class GameScreen extends BaseScreen {
             myGameShip.update(delta);
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
-            enemiesEmitter.generateEnemyShips(delta);
+            enemiesEmitter.generateEnemyShips(delta,enemyShipKilled);
         }
     }
     private void checkCollisions(){
@@ -202,6 +226,7 @@ public class GameScreen extends BaseScreen {
             if (myGameShip.pos.dst(one.pos) <= minDist){
                 one.destroy();
                 myGameShip.damage(one.getDamage());
+                enemyShipKilled++;
             }
         }
         List<Bullet> bulletList = bulletPool.getActiveObjects();
@@ -217,6 +242,9 @@ public class GameScreen extends BaseScreen {
                 if (oneEnemyShip.isBulletCollision(oneShoot)){
                     oneEnemyShip.damage(oneShoot.getDamage());
                     oneShoot.destroy();
+                    if (oneEnemyShip.isDestroyed()){
+                      enemyShipKilled++;
+                    }
                 }
             }
         }
@@ -245,10 +273,21 @@ public class GameScreen extends BaseScreen {
                 myGameShip.draw(batch);
                 bulletPool.drawActiveSprites(batch);
                 enemyPool.drawActiveSprites(batch);
+                printInto();
             }else if(state == State.GAME_OVER) {
                 gameOver.draw(batch);
                 newGameStart.draw(batch);
             }
+
         batch.end();
+    }
+    private void printInto(){
+        stringBuilderEnemyKilled.setLength(0);
+        stringBuilderHeathPoint.setLength(0);
+        stringBuilderLevel.setLength(0);
+        fonts.draw(batch,stringBuilderEnemyKilled.append(ENEMY_SHIP_KILLED).append(enemyShipKilled),worldBounds.getLeft()+0.01f,worldBounds.getTop()-0.01f);
+        fonts.draw(batch,stringBuilderLevel.append(LEVEL_GAME).append(enemiesEmitter.getLevel()),worldBounds.pos.x-0.07f,worldBounds.getTop() - 0.01f);
+        fonts.draw(batch,stringBuilderHeathPoint.append(HEATHPOINT).append(myGameShip.getHealthPoint()),worldBounds.getRight()-0.12f,worldBounds.getTop()-0.01f);
+
     }
 }
