@@ -13,7 +13,7 @@ public class Star extends Sprite {
     public Vector2 getSpeedStar() {
         return speedStar;
     }
-    private final Vector2 speedStar;
+    protected final Vector2 speedStar;
 
     private Rect worldBounds;
     private float animateTimer;
@@ -29,6 +29,16 @@ public class Star extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(speedStar,delta);
+        checkAndHandleBounds();
+        animateTimer +=delta;
+        if (animateTimer >= animateInterval){
+            animateTimer=0;
+            setHeightProportion(STAR_HEIGHT);
+        }else {
+            setHeightProportion(getHeight()+ 0.0002f);
+        }
+    }
+    public void checkAndHandleBounds(){
         if (getRight()< worldBounds.getLeft()){
             setLeft(worldBounds.getRight());
         }
@@ -40,13 +50,6 @@ public class Star extends Sprite {
         }
         if (getBottom()> worldBounds.getTop()){
             setTop(worldBounds.getBottom());
-        }
-        animateTimer +=delta;
-        if (animateTimer >= animateInterval){
-            animateTimer=0;
-            setHeightProportion(STAR_HEIGHT);
-        }else {
-            setHeightProportion(getHeight()+ 0.0002f);
         }
     }
 

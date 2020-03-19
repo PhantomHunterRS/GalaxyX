@@ -86,4 +86,8 @@ public class Ship extends Sprite {
     public int getHealthPoint() {
         return healthPoint;
     }
+
+    public Vector2 getSpeedShip() {
+        return speedShip;
+    }
 }

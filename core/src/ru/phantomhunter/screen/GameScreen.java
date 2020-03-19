@@ -25,6 +25,7 @@ import ru.phantomhunter.sprite.GameOver;
 import ru.phantomhunter.sprite.MyGameShip;
 import ru.phantomhunter.sprite.NewGameStart;
 import ru.phantomhunter.sprite.Star;
+import ru.phantomhunter.sprite.TrackingStar;
 import ru.phantomhunter.utils.EnemiesEmitter;
 import ru.phantomhunter.utils.Font;
 import sun.print.PSPrinterJob;
@@ -78,16 +79,26 @@ public class GameScreen extends BaseScreen {
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
         soundShootEnemy = Gdx.audio.newSound(Gdx.files.internal("music/OneShoot.mp3"));
         soundBoom = Gdx.audio.newSound(Gdx.files.internal("music/boom.mp3"));
-        stars = new Star[STAR_COUNT];
-        for (int i=0;i<STAR_COUNT;i++) {
-            stars[i] = new Star(atlasStars, "star2");
-            stars[i].getSpeedStar().set(Rnd.nextFloat(-0.001f, 0.001f),Rnd.nextFloat(-2f, -0.3f));
-        }
+
         bulletPool = new BulletPool();
         explosionPool = new ExplosionPool(atlas,soundBoom);
         enemyPool = new EnemyPool(bulletPool,explosionPool,soundShootEnemy,worldBounds);
         enemiesEmitter = new EnemiesEmitter(atlas,enemyPool,worldBounds);
         myGameShip = new MyGameShip(atlas,bulletPool,explosionPool);
+        stars = new TrackingStar[STAR_COUNT];
+
+        for (int i = 0; i < STAR_COUNT; i++) {
+            if (i % 100 == 0) {
+                stars[i] = new TrackingStar(atlasStars, "star3",myGameShip.getSpeedShip());
+                stars[i].getSpeedStar().set(Rnd.nextFloat(-0.001f, 0.001f), Rnd.nextFloat(-2f, -0.3f));
+            } else if (i % 15 == 0) {
+                stars[i] = new TrackingStar(atlasStars, "star1", myGameShip.getSpeedShip());
+                stars[i].getSpeedStar().set(Rnd.nextFloat(-0.001f, 0.001f), Rnd.nextFloat(-2f, -0.3f));
+            } else {
+                stars[i] = new TrackingStar(atlasStars, "star2",myGameShip.getSpeedShip());
+                stars[i].getSpeedStar().set(Rnd.nextFloat(-0.001f, 0.001f), Rnd.nextFloat(-2f, -0.3f));
+            }
+        }
         melodyGame = Gdx.audio.newMusic(Gdx.files.internal("music/cosmos.mp3"));
         melodyGame.setLooping(true);
         melodyGame.play();
